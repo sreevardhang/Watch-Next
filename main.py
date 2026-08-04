@@ -37,45 +37,59 @@ def calculate_score(selectedtitle, medialist):
             continue
 
         item_score = 0
+        reasons = []
 
         if selectedtitle['mood'] == item['mood']:
             item_score += 3
+            reasons.append("matching mood")
 
         if selectedtitle['type'] == item['type']:
             item_score += 1
+            reasons.append("matching type")
 
         item_genres = set(genre.strip().lower() for genre in item['genres'].split(','))
 
         shared_genres = selected_genres.intersection(item_genres)
 
-        item_score += len(shared_genres) * 2
+        if shared_genres:
+            item_score += len(shared_genres) * 2
+            reasons.append(f"shared genres: {', '.join(sorted(shared_genres))}")
 
-        scores[item['title']] = item_score    
+        scores[item["title"]] = {"score": item_score, "reasons": reasons}
 
     return scores
 
 def get_recommendations(scores, limit=3):
-    positive_scores = {title:score for title,score in scores.items() if score > 0}
+    positive_scores = {title: details for title, details in scores.items() if details["score"] > 0}
 
-    sorted_scores = sorted(positive_scores.items(), key=lambda pair: pair[1], reverse = True)
+    sorted_scores = sorted(positive_scores.items(), key=lambda pair: pair[1]["score"], reverse = True)
 
     return sorted_scores[:limit]
 
 def main():
 
-    title_input = input("Enter a title you liked: ")
+    print("Media Recommendation Engine")
+    print("Type 'exit' or 'quit' to close the program")
 
-    selected_title = find_title(medialib, title_input)
+    while(True):
+        title_input = input("Enter a title you liked: ")
+        if title_input.strip().lower() in ['exit', 'quit']:
+            return
+        selected_title = find_title(medialib, title_input)
 
-    if selected_title is None:
-        print("Title not found")
-        return
-    
-    scores = calculate_score(selected_title, medialib)
-    recommendations = get_recommendations(scores)
-
-    for title, score in recommendations:
-        print(f"{title} -- Similarity Score: {score}")
+        if selected_title is None:
+            print("Title not found")
+            continue
+        
+        scores = calculate_score(selected_title, medialib)
+        recommendations = get_recommendations(scores)
+        print("\n")
+        print("Your recommendations (top 3): ")
+        for title, details in recommendations:
+            print(f"{title}")
+            print(f"Similarity Score: {details['score']}")
+            print(f"Reasons: {', '.join(details['reasons'])}")
+            print("\n")
 
 if __name__ == "__main__":
     main()
