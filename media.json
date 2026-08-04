@@ -1,0 +1,58 @@
+[
+    {
+        "title": "The Shawshank Redemption (1994)",
+        "type": "movie",
+        "genres": "Drama, Prison",
+        "mood": "serious",
+        "runtime": "2h22m"
+    },
+    {
+        "title": "The Godfather (1972)",
+        "type": "movie",
+        "genres": "Gangster, Crime, Drama",
+        "mood": "serious",
+        "runtime": "2h55m"
+    },
+    {
+        "title": "Spirited Away (2001)",
+        "type": "movie",
+        "genres": "Anime, Adventure, Isekai",
+        "mood": "light",
+        "runtime": "2h4m"
+    },
+    {
+        "title": "The Prestige (2006)",
+        "type": "movie",
+        "genres": "Drama, Mystery, Sci-Fi, Thriller",
+        "mood": "exciting",
+        "runtime": "2h10m"
+    },
+    {
+        "title": "Modern Times (1936)",
+        "type": "movie",
+        "genres": "Slapstick, Comedy, Satire, Romance",
+        "mood": "funny",
+        "runtime": "1h27m"
+    },
+    {
+        "title": "The Office (2005-2013)",
+        "type": "show",
+        "genres": "Mockumentary, Comedy, Sitcom, Satire",
+        "mood": "funny",
+        "runtime": "n/a"
+    },
+    {
+        "title": "Breaking Bad (2008-2013)",
+        "type": "show",
+        "genres": "Crime, Drama, Thriller",
+        "mood": "serious",
+        "runtime": "n/a"
+    },
+    {
+        "title": "Game of Thrones (2011-2019)",
+        "type": "show",
+        "genres": "Fantasy, Drama, Epic",
+        "mood": "exciting",
+        "runtime": "n/a"
+    }
+]
