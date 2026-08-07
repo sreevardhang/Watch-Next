@@ -3,21 +3,6 @@ import json
 with open('media.json', 'r') as file:
     medialib = json.load(file)
 
-moods = ["light", "serious", "funny", "sad", "exciting"]
-
-def find_recommendations(media, mood, media_type, genre):
-    recommendations = []
-
-    for item in media:
-        mood_matches = item["mood"] == mood
-        type_matches = item["type"] == media_type
-        genre_matches = not genre or genre in item["genres"].lower()
-
-        if mood_matches and type_matches and genre_matches:
-            recommendations.append(item)
-
-    return recommendations
-
 def find_title(medialist, usertitle):
     cleantitle = usertitle.strip().lower()
 
@@ -71,7 +56,7 @@ def main():
     print("Media Recommendation Engine")
     print("Type 'exit' or 'quit' to close the program")
 
-    while(True):
+    while True:
         title_input = input("Enter a title you liked: ")
         if title_input.strip().lower() in ['exit', 'quit']:
             return
@@ -79,10 +64,16 @@ def main():
 
         if selected_title is None:
             print("Title not found")
+            print("\n")
             continue
         
         scores = calculate_score(selected_title, medialib)
         recommendations = get_recommendations(scores)
+
+        if not recommendations:
+            print("No appropriate recommendations found!\n")
+            continue
+        
         print("\n")
         print("Your recommendations (top 3): ")
         for title, details in recommendations:
