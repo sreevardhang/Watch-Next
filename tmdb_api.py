@@ -159,9 +159,15 @@ def get_recommendations(scores):
     return sorted_scores[:RESULT_LIMIT]
 
 if __name__ == "__main__":
-    title = input("Search for a movie: ")
 
-    results = search_movies(title)
+    while True:
+        title = input("Search for a movie: ")
+        results = search_movies(title)
+        if not results:
+            print("No such movie found! Try again!\n")
+            continue
+        break
+
     displayed_results = results[:5]
     genre_map = get_movie_genres()
 
@@ -189,14 +195,6 @@ if __name__ == "__main__":
 
     candidates_normalized = [normalize_movie(movie, genre_map) for movie in candidates]
 
-    # print("\nSelected Normalized: ")
-    # print(selected_normalized)
-
-    # print("\nCandidates Normalized: ")
-    # for movie in candidates_normalized[:3]:
-    #     print(movie)
-
-
     scores = calculate_scores(selected_normalized, candidates_normalized)
 
     recommendations = get_recommendations(scores)
@@ -206,7 +204,5 @@ if __name__ == "__main__":
     for title, details in recommendations:
         print(title)
         print(f"Similarity Score: {details['score']}")
-        print(f"Reasons: {details['reasons']}")
+        print(f"Reasons: {', '.join(details['reasons'])}")
         print("-" * 40)
-
-
