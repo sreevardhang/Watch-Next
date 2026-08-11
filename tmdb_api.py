@@ -107,11 +107,29 @@ def normalize_movie(movie, genre_map):
     else:
         genres = [genre["name"] for genre in movie.get("genres",[])]
 
+    release_date = movie.get('release_date','')
+
+    if release_date:
+        release_year = int(release_date[:4])
+    else:
+        release_year = None
+
     return {
         "title": movie['title'],
         "type": "movie",
         "genres": genres,
         "rating": movie.get('vote_average',0),
+        "release_year": release_year,
         "runtime": movie.get('runtime', 'No runtime available'),
         "id": movie['id']
     }
+
+# if __name__ == "__main__":
+
+#     genre_map = get_movie_genres()
+
+#     movie = get_movie_details(231)
+
+#     norm_movie = normalize_movie(movie, genre_map)
+
+#     print(norm_movie)
