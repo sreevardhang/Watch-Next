@@ -4,6 +4,7 @@ from tmdb_api import(
     get_movie_details,
     get_tmdb_recommendations,
     normalize_movie,
+    get_movie_keywords
 )
 
 from recommendation import(
@@ -41,12 +42,17 @@ if __name__ == "__main__":
     selected_movie = displayed_results[choice_num - 1]
 
     movie_details = get_movie_details(selected_movie['id'])
+    selected_keywords = get_movie_keywords(selected_movie['id'])
+    selected_normalized = normalize_movie(movie_details, selected_keywords, genre_map)
 
-    selected_normalized = normalize_movie(movie_details, genre_map)
+    candidates = get_tmdb_recommendations(selected_movie["id"])[:10]
 
-    candidates = get_tmdb_recommendations(selected_movie["id"])
+    candidates_normalized = []
+    for candidate in candidates:
+        candidate_keywords = get_movie_keywords(candidate['id'])
+        candidates_normalized.append(normalize_movie(candidate, candidate_keywords, genre_map))
 
-    candidates_normalized = [normalize_movie(movie, genre_map) for movie in candidates]
+    # candidates_normalized = [normalize_movie(movie, genre_map) for movie in candidates]
 
     scores = calculate_scores(selected_normalized, candidates_normalized)
 
