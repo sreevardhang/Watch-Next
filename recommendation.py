@@ -58,5 +58,14 @@ def get_recommendations(scores):
         key=lambda pair: pair[1]['score'],
         reverse = True
     )
+    recommendations = []
 
-    return sorted_scores[:RESULT_LIMIT]
+    for title, details in sorted_scores[:RESULT_LIMIT]:
+        recommendations.append({
+            "title": title,
+            "score": details["score"],
+            "reasons": details["reasons"],
+            "movie_details": details["movie"]
+        })
+
+    return recommendations

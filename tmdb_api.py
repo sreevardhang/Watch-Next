@@ -93,6 +93,8 @@ def get_movie_details(movie_id):
         timeout=10
     )
 
+    if response.status_code == 404:
+        return None
     response.raise_for_status()
 
     return response.json()
