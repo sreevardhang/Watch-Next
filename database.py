@@ -7,10 +7,10 @@ engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine)
 
-# with engine.connect() as connection:
-#     result = connection.execute(
-#         text("SELECT * FROM users;")
-#     )
+def get_db():
+    db = SessionLocal()
 
-#     for row in result:
-#         print(row)
+    try:
+        yield db
+    finally:
+        db.close()
