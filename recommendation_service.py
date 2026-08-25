@@ -12,7 +12,7 @@ from recommendation import (
 
 NUM_OF_CANDIDATES = 10
 
-def generate_recommendations(movie_id):
+def generate_recommendations(movie_id, watched_movie_ids=None):
     genre_map = get_movie_genres()
 
     selected_details = get_movie_details(movie_id)
@@ -24,8 +24,16 @@ def generate_recommendations(movie_id):
 
     norm_selected_movie = normalize_movie(selected_details, selected_keywords, genre_map)
 
-    candidates = get_tmdb_recommendations(movie_id)[:NUM_OF_CANDIDATES]
+    candidates = get_tmdb_recommendations(movie_id)
 
+    if watched_movie_ids:
+        candidates = [
+            candidate
+            for candidate in candidates
+            if candidate['id'] not in watched_movie_ids
+        ]
+
+    candidates = candidates[:NUM_OF_CANDIDATES]
     norm_candidates = []
     for candidate in candidates:
         candidate_keywords = get_movie_keywords(candidate['id'])

@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from tmdb_api import search_movies, get_movie_details
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -19,6 +21,16 @@ from database import get_db
 from models import User, WatchlistItem, WatchedMovie
 
 app = FastAPI()
+
+app.mount(
+    "/static",
+    StaticFiles(directory="frontend"),
+    name="static"
+)
+
+@app.get("/")
+def frontend():
+    return FileResponse("frontend/index.html")
 
 @app.get("/health")
 def health():
@@ -45,9 +57,17 @@ def movie_search(query: str):
         "/recommendations/{movie_id}",
         response_model=list[RecommendationResponse]
         )
-def recommendations(movie_id: int):
-
-    result = generate_recommendations(movie_id)
+def recommendations(movie_id: int, user_id: int | None = None, session: Session = Depends(get_db)):
+    watched_movie_ids = None
+    if user_id is not None:
+        user = session.get(User, user_id)
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found!"
+            )
+        watched_movie_ids = set(session.scalars(select(WatchedMovie.movie_id).where(WatchedMovie.user_id == user_id)).all())
+    result = generate_recommendations(movie_id, watched_movie_ids)
 
     if result is None:
         raise HTTPException(
